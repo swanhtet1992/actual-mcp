@@ -1,6 +1,65 @@
 ### 🔄 Project Awareness & Context
 
 - **Follow the existing TypeScript project structure** and maintain consistency with established patterns.
+- **This is a fork** of `s-stefanov/actual-mcp` with custom features and GHCR publishing.
+
+### 🚀 Branch Strategy & Release Workflow
+
+This fork uses a three-branch strategy to keep upstream contributions clean while maintaining custom features:
+
+```
+upstream (s-stefanov/actual-mcp)
+      │
+      │ git fetch upstream && git merge upstream/main
+      ▼
+main ─────────────────────────────────────────────
+      │         (stays clean, syncs with upstream)
+      │
+      │ git checkout release && git merge main
+      ▼
+release ──────────────────────────────────────────
+      │    (contains: custom features + GHCR publishing)
+      │
+      └──► release-please triggers here
+           └──► GHCR image: ghcr.io/swanhtet1992/actual-mcp
+```
+
+**Branch purposes:**
+- **`main`**: Clean mirror of upstream. Never commit custom features here.
+- **`release`**: Production branch with all custom features. GHCR publishes from here.
+- **`feat/*`**: Feature branches for upstream PRs (keep clean, no fork-specific changes).
+
+**Common workflows:**
+
+```bash
+# Sync with upstream
+git fetch upstream
+git checkout main
+git merge upstream/main
+git push origin main
+
+# Update release with upstream changes
+git checkout release
+git merge main
+git push origin release
+
+# Create feature for upstream PR
+git checkout main
+git checkout -b feat/new-feature
+# ... make changes ...
+git push -u origin feat/new-feature
+# Create PR to upstream (s-stefanov/actual-mcp)
+
+# Add feature to our release (after or before upstream merge)
+git checkout release
+git merge feat/new-feature
+git push origin release
+```
+
+**Docker image:**
+- Published to: `ghcr.io/swanhtet1992/actual-mcp:latest`
+- Triggered by: release-please on `release` branch
+- Local build: `docker build -t ghcr.io/swanhtet1992/actual-mcp:latest .`
 
 ### 🧱 Code Structure & Modularity
 
